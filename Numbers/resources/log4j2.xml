@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%-5level] %d{dd/MM/yyyy-HH:mm:ss} [%t] %M - %msg%n "/>
+		</Console>
+		<RollingFile name="arquivo" fileName="numbers.log" filePattern="numbers-%d{dd-MM-yyyy_hh-mm-ss}.log">
+			<PatternLayout pattern="%d{dd/MM/yyyy-HH:mm:ss} - %msg%n "/>		
+			<Policies>
+				<OnStartupTriggeringPolicy/>
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	
+	<Loggers>
+		<Root level="all">
+			<AppenderRef ref="console" level="fatal" />
+			<AppenderRef ref="arquivo" level="info" />
+		</Root>
+	</Loggers>
+</Configuration>

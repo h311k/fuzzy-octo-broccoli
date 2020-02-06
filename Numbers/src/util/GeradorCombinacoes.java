@@ -1,26 +1,29 @@
 package util;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.paukov.combinatorics3.Generator;
 
 public class GeradorCombinacoes {
 	
 	int i=0;
 	StringBuilder sequencia = null;
+	
+	private static Logger LOGGER = LogManager.getLogger("Processo de exclusão");
 
-	public void geraCombinacoes(String valores) {
-		String inicioAtividade = String.valueOf(LocalDateTime.now());
-		System.out.println("Início da atividade: "
-				+ inicioAtividade);
-		String[] numeros = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" }; // aqui pode ser qualquer objeto que implemente Comparable
+	public void geraCombinacoes(String valores) throws IOException {
 		
+		LOGGER.info("Início do processo de exclusão");
+		LOGGER.info("Lendo a sequência de 50 números");
+		String[] numeros = Propriedades.getProp().getProperty("prop.numbers.sequencia").split(",");
 		try {
-			Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=numbers;user=numbers;password=19650917");
+			Connection con = ConnectionFactory.getInstance();
 			con.setAutoCommit(false);
 			Statement stmt = con.createStatement();
 			Generator.combination(numeros)
@@ -45,6 +48,10 @@ public class GeradorCombinacoes {
 			stmt.executeBatch();
 			con.commit();
 			stmt.clearBatch();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM sequencias");
+			rs.next();
+			LOGGER.info("Total de linhas no banco após a exclusão: "+rs.getLong(1));
+			rs.close();
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

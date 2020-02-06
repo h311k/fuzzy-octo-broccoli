@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import util.GeradorCombinacoes;
 import util.GeradorNumeros;
 
@@ -14,11 +17,15 @@ public class Numbers {
 	
 	static String TERMINO_EXCLUSAO = "";
 
-	public static void main(String[] args) {
+	private static Logger LOGGER = LogManager.getLogger("Execução da atividade");
+	
+	public static void main(String[] args) throws IOException {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 		
 		String inicioAtividade = LocalDateTime.now().format(formatter);
+		
+		LOGGER.info("Início da atividade");
 		
 		Thread t = new Thread(() -> {
 			try {				
@@ -73,7 +80,11 @@ public class Numbers {
 			System.out.println("Banco de dados criado! inciciando processo de exclusão.");
 			Thread exlcusao = new Thread(() -> {
 				GeradorCombinacoes gc = new GeradorCombinacoes();
-				gc.geraCombinacoes(null);
+				try {
+					gc.geraCombinacoes(null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			});
 			exlcusao.start();
 			new Thread(()->{
@@ -116,6 +127,7 @@ public class Numbers {
 						e.printStackTrace();
 					}
 				}
+				LOGGER.info("Conclusão da atividade");
 				System.out.print("\033[2J");
 				System.out.println("Início do processo de geração do banco: "+inicioAtividade);
 				System.out.println("Término do processo de geração do banco: "+TERMINO_ATIVIDADE);
