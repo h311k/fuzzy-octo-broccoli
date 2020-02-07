@@ -17,7 +17,7 @@ public class GeradorCombinacoes {
 	
 	private static Logger LOGGER = LogManager.getLogger("Processo de exclusão");
 
-	public void geraCombinacoes(String valores) throws IOException {
+	public void geraCombinacoes() throws IOException {
 		
 		LOGGER.info("Início do processo de exclusão");
 		LOGGER.info("Lendo a sequência de 50 números");

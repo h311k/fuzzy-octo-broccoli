@@ -81,7 +81,7 @@ public class Numbers {
 			Thread exlcusao = new Thread(() -> {
 				GeradorCombinacoes gc = new GeradorCombinacoes();
 				try {
-					gc.geraCombinacoes(null);
+					gc.geraCombinacoes();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
